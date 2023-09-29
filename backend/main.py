@@ -1,6 +1,6 @@
 import json
 import pandas as pd
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
@@ -16,6 +16,7 @@ def index():
         'records': records
     }
     return result
+
 
 @app.route('/analyse', methods=['GET', 'POST'])
 @cross_origin(options=None)

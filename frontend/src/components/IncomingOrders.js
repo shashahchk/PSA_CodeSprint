@@ -5,7 +5,7 @@ const IncomingOrders = () => {
 
     useEffect(() => {
         // Fetching data from the Flask API
-        fetch('http://localhost:5000/api/incomingOrders')
+        fetch('http://localhost:5000/api/fetch-data')
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');

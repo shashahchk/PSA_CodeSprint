@@ -7,18 +7,18 @@ app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'secret!'
 
-@app.route('/')
+@app.route('/api/fetch-data')
 def index():
     orders = xlsx_to_json('../dataset/Order Dataset.xlsx')
-    records = xlsx_to_json('../dataset/Ship Dataset.xlsx')
+    ships = xlsx_to_json('../dataset/Ship Dataset.xlsx')
     result = {
         'orders': orders,
-        'records': records
+        'ships': ships
     }
     return result
 
 
-@app.route('/analyse', methods=['GET', 'POST'])
+@app.route('/api/analyse', methods=['GET', 'POST'])
 @cross_origin(options=None)
 def analyse():
     if request.method == 'POST':

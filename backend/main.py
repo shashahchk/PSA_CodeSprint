@@ -10,10 +10,10 @@ app.config['SECRET_KEY'] = 'secret!'
 @app.route('/')
 def index():
     orders = xlsx_to_json('../dataset/Order Dataset.xlsx')
-    records = xlsx_to_json('../dataset/Ship Dataset.xlsx')
+    ships = xlsx_to_json('../dataset/Ship Dataset.xlsx')
     result = {
         'orders': orders,
-        'records': records
+        'ships': ships
     }
     return result
 

@@ -4,7 +4,7 @@
 
 ### Decision Variables:
 
-- $ x\_{i,j} $ - Binary decision variable. It's 1 if shipment $ i $ is assigned to ship $ j $, and 0 otherwise.
+- $x_{i,j}$ - Binary decision variable. It's 1 if shipment $ i $ is assigned to ship $ j $, and 0 otherwise.
 - $ y_j $ - Continuous decision variable representing the % fullness of ship $ j $.
 - $ t_i $ - Continuous decision variable indicating the time until delivery for shipment $ i $.
 - $ z\_{i,j} $ - Binary decision variable. It's 1 if shipment $ i $ and shipment $ j $ are combined, and 0 otherwise.

@@ -12,7 +12,10 @@ const IncomingOrders = () => {
                 }
                 return response.json();
             })
-            .then((data) => setOrders(data))
+            .then(data => {
+                setOrders(data.orders)
+                console.log(data.orders)
+            })
             .catch((error) => console.error('Error fetching incoming orders:', error));
     }, []);
 

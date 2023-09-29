@@ -1,6 +1,6 @@
 import json
 import pandas as pd
-from flask import Flask, request, jsonify
+from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)

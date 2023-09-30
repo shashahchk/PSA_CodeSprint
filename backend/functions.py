@@ -28,6 +28,13 @@ def seperate_incoming_outgoing(entries):
 
     return result
 
+def filter_by_order_id(order_ids, orders_to_ship):
+    result = []
+    for order in orders_to_ship:
+        if order['Order ID'] in order_ids:
+            result.append(order)
+    return result
+
 def find_ship_by_id(id: int, entries: dict):
     for entry in entries:
         if entry['Ship ID'] == id:

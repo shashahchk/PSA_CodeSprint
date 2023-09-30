@@ -45,9 +45,6 @@ const IncomingOrders = () => {
     "Weight of Order (tons)",
     "Auto-Assign",
   ];
-  const columnFunctions = {
-    "Expected Time of Arrival": (time) => new Date(time).toLocaleString(),
-  };
   const columnAlignments = {
     "Weight of Order (tons)": "right",
     "Auto-Assign": "center",
@@ -105,9 +102,9 @@ const IncomingOrders = () => {
                 <TableCell>{shipment["Port of Origin"]}</TableCell>
                 <TableCell>{shipment["Port of Destination"]}</TableCell>
                 <TableCell>
-                  {columnFunctions["Expected Time of Arrival"](
+                  {new Date(
                     shipment["Expected Time of Arrival"]
-                  )}
+                  ).toLocaleString()}
                 </TableCell>
                 <TableCell align="right">
                   {shipment["Weight of Order (tons)"]}

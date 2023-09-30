@@ -45,9 +45,7 @@ $$
 
    $x_{k,j} - x_{i,j} \leq 1 - z_{i,k} \quad \forall i, k, j$
 
-5. **Time Constraint**: Time until delivery for each shipment:
-
-    &\forall i \in \{1, 2, \ldots, \text{num\_orders}\}, \forall j \in \{1, 2, \ldots, \text{num\_ships}\}, \\
-    &\quad y[j] \left( \frac{{\text{ship\_df.loc}[j, \text{Arrival Time}] - \text{order\_df.loc}[i, \text{Expected Time of Arrival}]}}{{3600}} \right) \leq 0
-\end{align*}
+5. **Time Constraint**: Ship's arrival time < order's Expected time of arrival
+   
+    y[j] \cdot \left(\text{ship\_df.loc}[j, \text{'Arrival Time'}] - \text{order\_df.loc}[i, \text{'Expected Time of Arrival'}]\right).\text{total\_seconds}() / 3600 \leq 0
 

@@ -4,15 +4,19 @@ import {
   Checkbox,
   TableCell,
   Table,
-  TableRow,
   TableHead,
   TableBody,
+  TableRow,
   Button,
+  Paper,
+  TableContainer,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import api from "../api/api";
 import styled from "@emotion/styled";
 import Loading from "./Loading/Loading";
+import { StyledTableCell, StyledTableRow } from "./IncomingShipments";
+import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
 
 const LoadingContainer = styled.div(() => ({
   position: "fixed",
@@ -39,6 +43,22 @@ const StyledCheckbox = styled(Checkbox)(({ theme }) => ({
     color: theme.palette.grey[300],
   },
 }));
+
+const StyledAllCheckbox = styled(Checkbox)(({ theme }) => ({
+  color: theme.palette.grey[300],
+  "&.Mui-checked": {
+    color: theme.palette.grey[300],
+  },
+  "&.Mui-disabled": {
+    color: theme.palette.grey[300],
+  },
+}));
+
+const StyledIndeterminateCheckbox = styled(IndeterminateCheckBoxIcon)(
+  ({ theme }) => ({
+    color: theme.palette.grey[300],
+  })
+);
 
 const PendingOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -108,59 +128,66 @@ const PendingOrders = () => {
         </Button>
       </Grid>
       <Grid item xs={12}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              {columns.map((column, index) => (
-                <TableCell key={index} align={columnAlignments[column]}>
-                  {column === "Auto-Assign" ? (
-                    <>
-                      Select All <br />
-                      <StyledCheckbox
-                        disabled={isLoading}
-                        checked={selected.length === orders.length}
-                        onChange={(e) => {
-                          e.target.checked
-                            ? setSelected(orders.map((_, i) => i))
-                            : setSelected([]);
-                        }}
-                      />
-                    </>
-                  ) : (
-                    column
-                  )}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orders.map((shipment, index) => (
-              <TableRow key={index}>
-                <TableCell>{shipment["Port of Origin"]}</TableCell>
-                <TableCell>{shipment["Port of Destination"]}</TableCell>
-                <TableCell>
-                  {new Date(
-                    shipment["Expected Time of Arrival"]
-                  ).toLocaleString()}
-                </TableCell>
-                <TableCell align="right">
-                  {shipment["Weight of Order (tons)"]}
-                </TableCell>
-                <TableCell align="center">
-                  <StyledCheckbox
-                    disabled={isLoading}
-                    checked={selected.includes(index)}
-                    onChange={(e) => {
-                      e.target.checked
-                        ? setSelected([...selected, index])
-                        : setSelected(selected.filter((i) => i !== index));
-                    }}
-                  />
-                </TableCell>
+        <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                {columns.map((column, index) => (
+                  <StyledTableCell key={index} align={columnAlignments[column]}>
+                    {column === "Auto-Assign" ? (
+                      <>
+                        Select All <br />
+                        <StyledAllCheckbox
+                          indeterminate={
+                            selected.length > 0 &&
+                            selected.length < orders.length
+                          }
+                          indeterminateIcon={<StyledIndeterminateCheckbox />}
+                          disabled={isLoading}
+                          checked={selected.length === orders.length}
+                          onChange={(e) => {
+                            e.target.checked
+                              ? setSelected(orders.map((_, i) => i))
+                              : setSelected([]);
+                          }}
+                        />
+                      </>
+                    ) : (
+                      column
+                    )}
+                  </StyledTableCell>
+                ))}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {orders.map((shipment, index) => (
+                <StyledTableRow key={index}>
+                  <TableCell>{shipment["Port of Origin"]}</TableCell>
+                  <TableCell>{shipment["Port of Destination"]}</TableCell>
+                  <TableCell>
+                    {new Date(
+                      shipment["Expected Time of Arrival"]
+                    ).toLocaleString()}
+                  </TableCell>
+                  <TableCell align="right">
+                    {shipment["Weight of Order (tons)"]}
+                  </TableCell>
+                  <TableCell align="center">
+                    <StyledCheckbox
+                      disabled={isLoading}
+                      checked={selected.includes(index)}
+                      onChange={(e) => {
+                        e.target.checked
+                          ? setSelected([...selected, index])
+                          : setSelected(selected.filter((i) => i !== index));
+                      }}
+                    />
+                  </TableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Grid>
     </Grid>
   );

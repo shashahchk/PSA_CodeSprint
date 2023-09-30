@@ -6,11 +6,14 @@ import {
   TableRow,
   TableBody,
   TableCell,
+  Paper,
+  TableContainer,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import api from "../api/api";
 import ProgressBar from "./ProgressBar/ProgressBar";
 import Loading from "./Loading/Loading";
+import { StyledTableCell, StyledTableRow } from "./IncomingShipments";
 
 const OutgoingShipments = () => {
   const [shipments, setShipments] = useState([]);
@@ -67,46 +70,48 @@ const OutgoingShipments = () => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              {columns.map((column, index) => (
-                <TableCell key={index} align={columnAlignments[column]}>
-                  {column}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {shipments.map((shipment, index) => (
-              <TableRow key={index}>
-                <TableCell>{shipment["Shipping Line"]}</TableCell>
-                <TableCell>{shipment["Vessel Capacity (tonnes)"]}</TableCell>
-                <TableCell>{shipment["Port of Origin"]}</TableCell>
-                <TableCell>{shipment["Port of Destination"]}</TableCell>
-                <TableCell>
-                  {new Date(shipment["Destination Time"]).toLocaleString()}
-                </TableCell>
-                <TableCell>
-                  {new Date(shipment["Arrival Time"]).toLocaleString()}
-                </TableCell>
-                <TableCell>{shipment["Priority"]}</TableCell>
-                <TableCell>{shipment["Cargo Type"]}</TableCell>
-                <TableCell>{shipment["Idle Time (hours)"]}</TableCell>
-                <TableCell>{shipment["Weight of Order (tons)"]}</TableCell>
-                <TableCell>
-                  <ProgressBar
-                    width={`${
-                      (shipment["Weight of Order (tons)"] /
-                        shipment["Vessel Capacity (tonnes)"]) *
-                      100
-                    }%`}
-                  />
-                </TableCell>
+        <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                {columns.map((column, index) => (
+                  <StyledTableCell key={index} align={columnAlignments[column]}>
+                    {column}
+                  </StyledTableCell>
+                ))}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {shipments.map((shipment, index) => (
+                <StyledTableRow key={index}>
+                  <TableCell>{shipment["Shipping Line"]}</TableCell>
+                  <TableCell>{shipment["Vessel Capacity (tonnes)"]}</TableCell>
+                  <TableCell>{shipment["Port of Origin"]}</TableCell>
+                  <TableCell>{shipment["Port of Destination"]}</TableCell>
+                  <TableCell>
+                    {new Date(shipment["Destination Time"]).toLocaleString()}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(shipment["Arrival Time"]).toLocaleString()}
+                  </TableCell>
+                  <TableCell>{shipment["Priority"]}</TableCell>
+                  <TableCell>{shipment["Cargo Type"]}</TableCell>
+                  <TableCell>{shipment["Idle Time (hours)"]}</TableCell>
+                  <TableCell>{shipment["Weight of Order (tons)"]}</TableCell>
+                  <TableCell>
+                    <ProgressBar
+                      width={`${
+                        (shipment["Weight of Order (tons)"] /
+                          shipment["Vessel Capacity (tonnes)"]) *
+                        100
+                      }%`}
+                    />
+                  </TableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Grid>
     </Grid>
   );

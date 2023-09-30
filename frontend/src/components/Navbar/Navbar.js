@@ -1,6 +1,7 @@
 import React from "react";
 import psaLogo from "../../psa_logo.png";
-import { Grid, Link, styled } from "@mui/material";
+import { Grid, styled } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const StyledNavbar = styled(Grid)(({ theme }) => ({
   padding: theme.spacing(3, 6),
@@ -33,9 +34,9 @@ const Navbar = () => {
         <img src={psaLogo} alt="logo" style={{ width: "100px" }} />
       </a>
       <Grid item sx={{ alignSelf: "center" }}>
-        <StyledLink href="/incoming_shipments">Incoming Shipments</StyledLink>
-        <StyledLink href="/outgoing_shipments">Outgoing Shipments</StyledLink>
-        <StyledLink href="/incoming_orders">Incoming Orders</StyledLink>
+        <StyledLink to="/incoming_shipments">Incoming Shipments</StyledLink>
+        <StyledLink to="/outgoing_shipments">Outgoing Shipments</StyledLink>
+        <StyledLink to="/pending_orders">Pending Orders</StyledLink>
       </Grid>
     </StyledNavbar>
   );

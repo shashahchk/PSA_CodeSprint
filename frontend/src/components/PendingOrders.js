@@ -8,11 +8,11 @@ import {
   TableHead,
   TableBody,
   Button,
-  Tooltip,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import api from "../api/api";
 import styled from "@emotion/styled";
+import Loading from "./Loading";
 
 const StyledCheckbox = styled(Checkbox)(({ theme }) => ({
   "&.Mui-checked": {
@@ -20,7 +20,7 @@ const StyledCheckbox = styled(Checkbox)(({ theme }) => ({
   },
 }));
 
-const IncomingOrders = () => {
+const PendingOrders = () => {
   const [orders, setOrders] = useState([]);
   const [selected, setSelected] = useState([]);
 
@@ -50,6 +50,8 @@ const IncomingOrders = () => {
     "Auto-Assign": "center",
   };
 
+  if (orders.length === 0) return <Loading />;
+
   return (
     <Grid container rowGap={2} sx={{ px: 32, py: 4 }}>
       <Grid container item xs={12} justifyContent="space-between">
@@ -60,7 +62,7 @@ const IncomingOrders = () => {
           textAlign="left"
           fontWeight="500"
         >
-          Incoming Orders
+          Pending Orders
         </Typography>
         <Button
           variant="contained"
@@ -128,4 +130,4 @@ const IncomingOrders = () => {
   );
 };
 
-export default IncomingOrders;
+export default PendingOrders;

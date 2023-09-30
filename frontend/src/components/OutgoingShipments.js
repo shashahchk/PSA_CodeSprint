@@ -12,7 +12,7 @@ import api from "../api/api";
 import ProgressBar from "./ProgressBar/ProgressBar";
 import Loading from "./Loading";
 
-const IncomingShipments = () => {
+const OutgoingShipments = () => {
   const [shipments, setShipments] = useState([]);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const IncomingShipments = () => {
 
   const fetchData = async () => {
     try {
-      const response = (await api.get("/ships")).data.incoming;
+      const response = (await api.get("/ships")).data.outgoing;
       setShipments(
         response.map((ship) => ({
           ...ship,
@@ -30,7 +30,7 @@ const IncomingShipments = () => {
         }))
       );
     } catch (error) {
-      console.error("Error fetching incoming shipments:", error);
+      console.error("Error fetching outgoing shipments:", error);
     }
   };
 
@@ -63,7 +63,7 @@ const IncomingShipments = () => {
           textAlign="left"
           fontWeight="500"
         >
-          Incoming Shipments
+          Outgoing Shipments
         </Typography>
       </Grid>
       <Grid item xs={12}>
@@ -112,4 +112,4 @@ const IncomingShipments = () => {
   );
 };
 
-export default IncomingShipments;
+export default OutgoingShipments;

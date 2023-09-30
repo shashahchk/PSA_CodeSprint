@@ -10,7 +10,7 @@ import {
 import React, { useState, useEffect } from "react";
 import api from "../api/api";
 import ProgressBar from "./ProgressBar/ProgressBar";
-import Loading from "./Loading";
+import Loading from "./Loading/Loading";
 
 const OutgoingShipments = () => {
   const [shipments, setShipments] = useState([]);

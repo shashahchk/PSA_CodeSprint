@@ -12,17 +12,38 @@ import {
 import React, { useState, useEffect } from "react";
 import api from "../api/api";
 import styled from "@emotion/styled";
-import Loading from "./Loading";
+import Loading from "./Loading/Loading";
+
+const LoadingContainer = styled.div(() => ({
+  position: "fixed",
+  zIndex: 2,
+  left: "50%",
+}));
+
+const BlurFilter = styled.div`
+  backdrop-filter: blur(7px);
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.03);
+`;
 
 const StyledCheckbox = styled(Checkbox)(({ theme }) => ({
   "&.Mui-checked": {
     color: theme.palette.primary.main,
+  },
+  "&.Mui-disabled": {
+    color: theme.palette.grey[300],
   },
 }));
 
 const PendingOrders = () => {
   const [orders, setOrders] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // Fetching data from the Flask API
@@ -54,6 +75,14 @@ const PendingOrders = () => {
 
   return (
     <Grid container rowGap={2} sx={{ px: 32, py: 4 }}>
+      {isLoading && (
+        <>
+          <BlurFilter />
+          <LoadingContainer>
+            <Loading />
+          </LoadingContainer>
+        </>
+      )}
       <Grid container item xs={12} justifyContent="space-between">
         <Typography
           variant="h4"
@@ -68,9 +97,14 @@ const PendingOrders = () => {
           variant="contained"
           color="primary"
           sx={{ m: 3, borderRadius: 3 }}
-          disabled={selected.length === 0}
+          disabled={selected.length === 0 || isLoading}
+          onClick={async () => {
+            setIsLoading(true);
+          }}
         >
-          Auto-Assign Selected Orders
+          {`Auto-Assign ${selected.length} Selected Order${
+            selected.length === 1 ? "" : "s"
+          }`}
         </Button>
       </Grid>
       <Grid item xs={12}>
@@ -83,6 +117,7 @@ const PendingOrders = () => {
                     <>
                       Select All <br />
                       <StyledCheckbox
+                        disabled={isLoading}
                         checked={selected.length === orders.length}
                         onChange={(e) => {
                           e.target.checked
@@ -113,6 +148,7 @@ const PendingOrders = () => {
                 </TableCell>
                 <TableCell align="center">
                   <StyledCheckbox
+                    disabled={isLoading}
                     checked={selected.includes(index)}
                     onChange={(e) => {
                       e.target.checked

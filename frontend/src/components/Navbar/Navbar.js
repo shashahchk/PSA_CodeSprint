@@ -8,6 +8,9 @@ const StyledNavbar = styled(Grid)(({ theme }) => ({
   boxShadow: "0px 3px 3px rgba(0, 0, 0, 0.05)",
   borderRadius: theme.spacing(1.5),
   backgroundColor: "white",
+  zIndex: 2,
+  position: "sticky",
+  top: 0,
 }));
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -22,7 +25,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
   "&:hover": {
     color: "white",
     backgroundColor: theme.palette.primary.main,
-    boxShadow: "inset 0px 0px 4px rgba(0, 0, 0, 0.3)",
+    boxShadow: "inset 0px 0px 5px rgba(0, 0, 0, 0.4)",
   },
   transition: "all 0.3s ease",
 }));

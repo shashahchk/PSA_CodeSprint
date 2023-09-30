@@ -23,7 +23,6 @@ const IncomingOrders = () => {
       })
       .then((data) => {
         setOrders(data.orders);
-        console.log(data.orders);
       })
       .catch((error) =>
         console.error("Error fetching incoming orders:", error)
@@ -37,41 +36,27 @@ const IncomingOrders = () => {
           Incoming Orders
         </Typography>
       </Grid>
-      <Grid item xs={12} sx={{ m: 3, p: 3 }}>
+      <Grid item xs={12} sx={{ px: 8 }}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Shipping Line</TableCell>
-              <TableCell>Vessel Capacity</TableCell>
-              <TableCell>Weight of Order</TableCell>
               <TableCell>Port of Origin</TableCell>
               <TableCell>Port of Destination</TableCell>
-              <TableCell>Arrival Time</TableCell>
-              <TableCell>Destination Time</TableCell>
-              <TableCell>Priority</TableCell>
-              <TableCell>Cargo Type</TableCell>
-              <TableCell>Idle Time</TableCell>
+              <TableCell>Expected Arrival Time</TableCell>
+              <TableCell>Weight of Order (tons)</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders.map((order, index) => {
+            {orders.map((order, index) => (
               <TableRow key={index}>
-                <TableCell>{order["Shipping Line"]}</TableCell>
-                <TableCell>{order["Vessel Capacity (TEUs)"]}</TableCell>
-                <TableCell>{order["Weight of Order (tons)"]}</TableCell>
                 <TableCell>{order["Port of Origin"]}</TableCell>
                 <TableCell>{order["Port of Destination"]}</TableCell>
                 <TableCell>
-                  {new Date(order["Arrival Time"]).toLocaleString()}
+                  {new Date(order["Expected Time of Arrival"]).toLocaleString()}
                 </TableCell>
-                <TableCell>
-                  {new Date(order["Destination Time"]).toLocaleString()}
-                </TableCell>
-                <TableCell>{order["Priority"]}</TableCell>
-                <TableCell>{order["Cargo Type"]}</TableCell>
-                <TableCell>{order["Idle Time (hours)"]}</TableCell>
-              </TableRow>;
-            })}
+                <TableCell>{order["Weight of Order (tons)"]}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </Grid>

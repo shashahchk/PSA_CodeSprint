@@ -25,6 +25,7 @@ const OutgoingShipments = () => {
 
   const fetchData = async () => {
     try {
+      if (shipments.length > 0) return;
       const response = (await api.get("/ships")).data.outgoing;
       setShipments(
         response.map((ship) => ({

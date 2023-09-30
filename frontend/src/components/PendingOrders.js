@@ -11,12 +11,13 @@ import {
   Paper,
   TableContainer,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import api from "../api/api";
 import styled from "@emotion/styled";
 import Loading from "./Loading/Loading";
 import { StyledTableCell, StyledTableRow } from "./IncomingShipments";
 import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
+import { ShipmentsContext } from "../App";
 
 const LoadingContainer = styled.div(() => ({
   position: "fixed",
@@ -62,8 +63,18 @@ const StyledIndeterminateCheckbox = styled(IndeterminateCheckBoxIcon)(
 
 const PendingOrders = () => {
   const [orders, setOrders] = useState([]);
+  const [shipments, setShipments] = useContext(ShipmentsContext);
   const [selected, setSelected] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const getVisibleOrders = () =>
+    orders.filter(
+      (order) =>
+        !shipments
+          .flatMap((shipment) => shipment.orders)
+          .map((assignedOrder) => assignedOrder["Order ID"])
+          .includes(order["Order ID"])
+    );
 
   useEffect(() => {
     // Fetching data from the Flask API
@@ -120,6 +131,10 @@ const PendingOrders = () => {
           disabled={selected.length === 0 || isLoading}
           onClick={async () => {
             setIsLoading(true);
+            const response = await api.post("/assign_orders", {
+              ids: [...selected, ...orders.map((order) => order["Order ID"])],
+            });
+            setShipments(response.data);
           }}
         >
           {`Auto-Assign ${selected.length} Selected Order${
@@ -160,7 +175,7 @@ const PendingOrders = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.map((shipment, index) => (
+              {getVisibleOrders().map((shipment, index) => (
                 <StyledTableRow key={index}>
                   <TableCell>{shipment["Port of Origin"]}</TableCell>
                   <TableCell>{shipment["Port of Destination"]}</TableCell>

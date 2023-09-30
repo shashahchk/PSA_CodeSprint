@@ -9,11 +9,12 @@ import {
   TableContainer,
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import api from "../api/api";
 import ProgressBar from "./ProgressBar/ProgressBar";
 import Loading from "./Loading/Loading";
 import styled from "@emotion/styled";
+import { ShipmentsContext } from "../App";
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -33,7 +34,7 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const IncomingShipments = () => {
-  const [shipments, setShipments] = useState([]);
+  const [shipments, setShipments] = useContext(ShipmentsContext);
 
   useEffect(() => {
     // Fetching data from the Flask API
@@ -42,6 +43,7 @@ const IncomingShipments = () => {
 
   const fetchData = async () => {
     try {
+      if (shipments.length > 0) return;
       const response = (await api.get("/ships")).data.incoming;
       setShipments(
         response.map((ship) => ({

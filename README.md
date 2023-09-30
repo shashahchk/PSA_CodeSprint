@@ -23,7 +23,7 @@
 Maximize the fullness of ships and minimize the ship's arrival time and order's expected time of arrival while considering different priorities:
 
 $$
-\max \sum_{j} y_j - W_P \sum_i P_i t_i - \sum_i I_i + E_i
+\max \sum_{j} y_j - W_P \sum_i P_i - \sum_i I_i + E_i
 $$
 
 ### Constraints:

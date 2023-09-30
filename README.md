@@ -46,10 +46,5 @@ $$
    $x_{k,j} - x_{i,j} \leq 1 - z_{i,k} \quad \forall i, k, j$
 
 5. **Time Constraint**: Ship's arrival time < order's Expected time of arrival
-   \[ y[j] \cdot \left(\text{ship\_df.loc}[j, \text{'Arrival Time'}] - \text{order\_df.loc}[i, \text{'Expected Time of Arrival'}]\right).\text{total\_seconds}() / 3600 \leq 0 \]
-
-- \( y[j] \) represents a decision variable.
-- \(\text{ship\_df.loc}[j, \text{'Arrival Time'}]\) represents the arrival time from the ship DataFrame.
-- \(\text{order\_df.loc}[i, \text{'Expected Time of Arrival'}]\) represents the expected time of arrival from the order DataFrame.
-- \(\text{total\_seconds}()\): A function that calculates the total seconds difference between the two timestamps.
-- \(3600\): A constant to convert seconds to hours.
+   
+7. **Origin and Destination Constraint**: Order's port of origin and destination must match with Ship's port of origin and destination

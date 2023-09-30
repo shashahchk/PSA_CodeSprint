@@ -19,7 +19,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
   alignSelf: "center",
   "&:hover": {
     color: "white",
-    backgroundColor: "#74418c",
+    backgroundColor: theme.palette.primary.main,
     boxShadow: "inset 0px 0px 4px rgba(0, 0, 0, 0.3)",
   },
   transition: "all 0.3s ease",
@@ -32,8 +32,8 @@ const Navbar = () => {
         <img src={psaLogo} alt="logo" style={{ width: "100px" }} />
       </a>
       <Grid item sx={{ alignSelf: "center" }}>
-        <StyledLink href="/incoming_orders">Incoming Shipments</StyledLink>
-        <StyledLink href="/incoming_orders">Outgoing Shipments</StyledLink>
+        <StyledLink href="/incoming_shipments">Incoming Shipments</StyledLink>
+        <StyledLink href="/outgoing_shipments">Outgoing Shipments</StyledLink>
         <StyledLink href="/incoming_orders">Incoming Orders</StyledLink>
       </Grid>
     </StyledNavbar>

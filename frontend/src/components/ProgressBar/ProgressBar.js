@@ -6,14 +6,14 @@ const ProgressBackground = styled.div(({ theme }) => ({
   margin: theme.spacing(2, 0),
   width: theme.spacing(10),
   backgroundColor: theme.palette.grey[300],
-  borderRadius: theme.spacing(1),
+  borderRadius: theme.spacing(0.7),
 }));
 
 const Progress = styled.div(({ theme }) => ({
   width: 0,
   height: theme.spacing(2),
-  borderRadius: theme.spacing(1),
-  transition: "width 0.2s ease",
+  borderRadius: theme.spacing(0.7),
+  transition: "width 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
 }));
 
 const ProgressBar = ({ width }) => {
@@ -26,8 +26,6 @@ const ProgressBar = ({ width }) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.style.width = width;
-            console.log(width);
-            console.log(entry.target.style.width);
             entry.target.style.backgroundColor = theme.palette.primary.main;
             observer.unobserve(entry.target);
           }

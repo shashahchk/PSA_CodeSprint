@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import React, { useState } from "react";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (username === 'portWorker' && password === 'secure123') {
-      alert('Logged in successfully');
-      
+    if (username === "portWorker" && password === "secure123") {
+      alert("Logged in successfully");
+
       // Here, you can redirect or perform other tasks
     } else {
-      alert('Invalid credentials');
+      alert("Invalid credentials");
     }
   };
 
@@ -25,12 +25,12 @@ const LoginPage = () => {
       <Box
         sx={{
           marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        <Typography component="h1" variant="h5">
+        <Typography variant="h4" component="h1" sx={{ m: 3 }} fontWeight="500">
           Port Login
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>

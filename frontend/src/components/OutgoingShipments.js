@@ -5,39 +5,19 @@ import {
   TableHead,
   TableRow,
   TableBody,
+  TableCell,
   Paper,
   TableContainer,
 } from "@mui/material";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import React, { useState, useEffect, useContext } from "react";
 import api from "../api/api";
 import ProgressBar from "./ProgressBar/ProgressBar";
 import Loading from "./Loading/Loading";
-import styled from "@emotion/styled";
+import { StyledTableCell, StyledTableRow } from "./IncomingShipments";
 import { ShipmentsContext } from "../App";
-import { useNavigate } from "react-router-dom";
 
-export const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.primary.secondary,
-    color: theme.palette.common.white,
-  },
-}));
-
-export const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  cursor: "pointer",
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
-
-const IncomingShipments = () => {
+const OutgoingShipments = () => {
   const [shipments, setShipments] = useContext(ShipmentsContext);
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetching data from the Flask API
@@ -47,10 +27,10 @@ const IncomingShipments = () => {
   const fetchData = async () => {
     try {
       if (shipments.length > 0) return;
-      const response = (await api.get("/ships")).data.incoming;
-      setShipments({ ...shipments, incoming: response });
+      const response = (await api.get("/ships")).data.outgoing;
+      setShipments({ ...shipments, outgoing: response });
     } catch (error) {
-      console.error("Error fetching incoming shipments:", error);
+      console.error("Error fetching outgoing shipments:", error);
     }
   };
 
@@ -74,16 +54,16 @@ const IncomingShipments = () => {
   if (shipments.length === 0) return <Loading />;
 
   return (
-    <Grid container sx={{ px: 8, pb: 8 }}>
+    <Grid container rowGap={2} sx={{ px: 8, py: 4 }}>
       <Grid item xs={12}>
         <Typography
           variant="h4"
           component="h1"
-          sx={{ mx: 3, my: 5 }}
+          sx={{ m: 3 }}
           textAlign="left"
           fontWeight="500"
         >
-          Incoming Shipments
+          Outgoing Shipments
         </Typography>
       </Grid>
       <Grid item xs={12}>
@@ -99,11 +79,8 @@ const IncomingShipments = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {shipments.incoming.map((shipment, index) => (
-                <StyledTableRow
-                  key={index}
-                  onClick={() => navigate(`/shipment/${shipment["Ship ID"]}`)}
-                >
+              {shipments.outgoing.map((shipment, index) => (
+                <StyledTableRow key={index}>
                   <TableCell>{shipment["Shipping Line"]}</TableCell>
                   <TableCell>{shipment["Vessel Capacity (tonnes)"]}</TableCell>
                   <TableCell>{shipment["Port of Origin"]}</TableCell>
@@ -137,4 +114,4 @@ const IncomingShipments = () => {
   );
 };
 
-export default IncomingShipments;
+export default OutgoingShipments;

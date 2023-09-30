@@ -80,8 +80,8 @@ const Shipment = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {shipment.orders && shipment.orders.length !== 0 ? (
-                shipment.orders.map((shipment, index) => (
+              {shipment["Orders"] && shipment["Orders"].length !== 0 ? (
+                shipment["Orders"].map((shipment, index) => (
                   <StyledTableRow key={index}>
                     <TableCell>{shipment["Port of Origin"]}</TableCell>
                     <TableCell>{shipment["Port of Destination"]}</TableCell>

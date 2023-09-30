@@ -48,7 +48,7 @@ const IncomingShipments = () => {
     try {
       if (shipments.length > 0) return;
       const response = (await api.get("/ships")).data.incoming;
-      setShipments({ ...shipments, incoming: response.map(shipment => ({ ...shipment, orders: [] }))});
+      setShipments({ ...shipments, incoming: response.map(shipment => ({ ...shipment, orders: [], ["Weight of Order (tons)"]: 0 }))});
     } catch (error) {
       console.error("Error fetching incoming shipments:", error);
     }

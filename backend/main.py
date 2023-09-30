@@ -24,7 +24,8 @@ def assign_orders():
         data = request.get_json()
         ids = data['ids']
         print(ids)
-        result = json.loads(run_model())
+        # result = json.loads(run_model())        
+        result = xlsx_to_json('../model/pairings/pairings.xlsx')
         result = filter_by_order_id(ids, result)
         return collate_ships_to_orders(result)
     return "POST method only please"

@@ -136,7 +136,12 @@ const PendingOrders = () => {
             const response = await api.post("/assign_orders", {
               ids: totalOrders,
             });
-            setShipments(response.data);
+            setShipments({
+              incoming: response.data.filter(shipment => shipment["Port of Origin"] !== "Singapore")
+                .map(shipment => ({ ...shipment, ["Weight of Order (tons)"]: shipment["Orders"].reduce((acc, order) => acc + order["Weight of Order (tons)"], 0) })),
+              outgoing: response.data.filter(shipment => shipment["Port of Origin"] === "Singapore")
+                .map(shipment => ({ ...shipment, ["Weight of Order (tons)"]: shipment["Orders"].reduce((acc, order) => acc + order["Weight of Order (tons)"], 0) })),
+            });
             setAssignedOrders(totalOrders);
             setSelected([]);
             setIsLoading(false);
@@ -189,26 +194,27 @@ const PendingOrders = () => {
                       .map((ao) => ao["Order ID"])
                       .includes(order["Order ID"])
                 )
-                .map((shipment, index) => (
-                  <StyledTableRow key={index}>
-                    <TableCell>{shipment["Port of Origin"]}</TableCell>
-                    <TableCell>{shipment["Port of Destination"]}</TableCell>
+                .map((order) => (
+                  <StyledTableRow key={order["Order ID"]}>
+                    <TableCell>{order["Port of Origin"]}</TableCell>
+                    <TableCell>{order["Port of Destination"]}</TableCell>
                     <TableCell>
                       {new Date(
-                        shipment["Expected Time of Arrival"]
+                        order["Expected Time of Arrival"]
                       ).toLocaleString()}
                     </TableCell>
                     <TableCell align="right">
-                      {shipment["Weight of Order (tons)"]}
+                      {order["Weight of Order (tons)"]}
                     </TableCell>
                     <TableCell align="center">
                       <StyledCheckbox
                         disabled={isLoading}
-                        checked={selected.includes(index)}
+                        checked={selected.includes(order["Order ID"])}
                         onChange={(e) => {
+                          console.log(order["Order ID"])
                           e.target.checked
-                            ? setSelected([...selected, index])
-                            : setSelected(selected.filter((i) => i !== index));
+                            ? setSelected([...selected, order["Order ID"]])
+                            : setSelected(selected.filter((i) => i !== order["Order ID"]));
                         }}
                       />
                     </TableCell>

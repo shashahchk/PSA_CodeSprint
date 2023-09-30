@@ -8,6 +8,7 @@ import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
 import OutgoingShipments from "./components/OutgoingShipments";
 import { createContext, useState } from "react";
+import Shipment from "./components/Shipment";
 
 const theme = createTheme({
   palette: {
@@ -18,7 +19,10 @@ const theme = createTheme({
   },
 });
 
-export const ShipmentsContext = createContext();
+export const ShipmentsContext = createContext({
+  incoming: [],
+  outgoing: [],
+});
 
 function App() {
   const [shipments, setShipments] = useState({
@@ -36,6 +40,7 @@ function App() {
             <Route path="/pending_orders" element={<PendingOrders />} />
             <Route path="/incoming_shipments" element={<IncomingShipments />} />
             <Route path="/outgoing_shipments" element={<OutgoingShipments />} />
+            <Route path="/shipment/:id" element={<Shipment />} />
           </Routes>
         </ThemeProvider>
       </ShipmentsContext.Provider>

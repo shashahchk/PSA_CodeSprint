@@ -15,6 +15,7 @@ import ProgressBar from "./ProgressBar/ProgressBar";
 import Loading from "./Loading/Loading";
 import styled from "@emotion/styled";
 import { ShipmentsContext } from "../App";
+import { useNavigate } from "react-router-dom";
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -24,6 +25,7 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  cursor: "pointer",
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
@@ -35,6 +37,7 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const IncomingShipments = () => {
   const [shipments, setShipments] = useContext(ShipmentsContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetching data from the Flask API
@@ -45,10 +48,7 @@ const IncomingShipments = () => {
     try {
       if (shipments.length > 0) return;
       const response = (await api.get("/ships")).data.incoming;
-      setShipments((ss) => ({
-        ...ss,
-        incoming: response,
-      }));
+      setShipments({ ...shipments, incoming: response });
     } catch (error) {
       console.error("Error fetching incoming shipments:", error);
     }
@@ -59,16 +59,16 @@ const IncomingShipments = () => {
     "Vessel Capacity (tonnes)",
     "Port of Origin",
     "Port of Destination",
-    "Destination Time",
+    "Departure Time",
     "Arrival Time",
     "Priority",
     "Cargo Type",
     "Idle Time (hours)",
     "Weight of Order (tons)",
-    "% Loaded",
+    "% Capacity",
   ];
   const columnAlignments = {
-    "% Loaded": "center",
+    "% Capacity": "center",
   };
 
   if (shipments.length === 0) return <Loading />;
@@ -100,13 +100,16 @@ const IncomingShipments = () => {
             </TableHead>
             <TableBody>
               {shipments.incoming.map((shipment, index) => (
-                <StyledTableRow key={index}>
+                <StyledTableRow
+                  key={index}
+                  onClick={() => navigate(`/shipment/${shipment["Ship ID"]}`)}
+                >
                   <TableCell>{shipment["Shipping Line"]}</TableCell>
                   <TableCell>{shipment["Vessel Capacity (tonnes)"]}</TableCell>
                   <TableCell>{shipment["Port of Origin"]}</TableCell>
                   <TableCell>{shipment["Port of Destination"]}</TableCell>
                   <TableCell>
-                    {new Date(shipment["Destination Time"]).toLocaleString()}
+                    {new Date(shipment["Departure Time"]).toLocaleString()}
                   </TableCell>
                   <TableCell>
                     {new Date(shipment["Arrival Time"]).toLocaleString()}

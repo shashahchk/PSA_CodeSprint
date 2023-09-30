@@ -22,10 +22,10 @@ def ships():
 def assign_orders():
     if request.method == 'POST':
         data = request.form
-        ids = data['ids']
+        print(data)
         # TODO: get order_ids to pass into run_model
         result = json.loads(run_model())
-        result = filter_by_order_id(ids, result)
+        # result = filter_by_order_id(ids, result)
         return collate_ships_to_orders(result)
     return "POST method only please"
 

@@ -62,19 +62,20 @@ const StyledIndeterminateCheckbox = styled(IndeterminateCheckBoxIcon)(
 );
 
 const PendingOrders = () => {
-  const [orders, setOrders] = useState([]);
+  const [assignedOrders, setAssignedOrders] = useState([]);
+  const [orders, setOrders] = useState([]); // ALL ORDERS as sent by the API
   const [shipments, setShipments] = useContext(ShipmentsContext);
   const [selected, setSelected] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getVisibleOrders = () =>
-    orders.filter(
-      (order) =>
-        ![...shipments.incoming, ...shipments.outgoing]
-          .flatMap((shipment) => shipment.orders)
-          .map((assignedOrder) => assignedOrder["Order ID"])
-          .includes(order["Order ID"])
-    );
+  // const getVisibleOrders = () =>
+  //   orders.filter(
+  //     (order) =>
+  //       ![...shipments.incoming, ...shipments.outgoing]
+  //         .flatMap((shipment) => shipment.orders)
+  //         .map((assignedOrder) => assignedOrder["Order ID"])
+  //         .includes(order["Order ID"])
+  //   );
 
   useEffect(() => {
     // Fetching data from the Flask API
@@ -131,10 +132,14 @@ const PendingOrders = () => {
           disabled={selected.length === 0 || isLoading}
           onClick={async () => {
             setIsLoading(true);
+            const totalOrders = [...selected, ...assignedOrders];
             const response = await api.post("/assign_orders", {
-              ids: [...selected, ...orders.map((order) => order["Order ID"])],
+              ids: totalOrders,
             });
             setShipments(response.data);
+            setAssignedOrders(totalOrders);
+            setSelected([]);
+            setIsLoading(false);
           }}
         >
           {`Auto-Assign ${selected.length} Selected Order${
@@ -175,31 +180,38 @@ const PendingOrders = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {getVisibleOrders().map((shipment, index) => (
-                <StyledTableRow key={index}>
-                  <TableCell>{shipment["Port of Origin"]}</TableCell>
-                  <TableCell>{shipment["Port of Destination"]}</TableCell>
-                  <TableCell>
-                    {new Date(
-                      shipment["Expected Time of Arrival"]
-                    ).toLocaleString()}
-                  </TableCell>
-                  <TableCell align="right">
-                    {shipment["Weight of Order (tons)"]}
-                  </TableCell>
-                  <TableCell align="center">
-                    <StyledCheckbox
-                      disabled={isLoading}
-                      checked={selected.includes(index)}
-                      onChange={(e) => {
-                        e.target.checked
-                          ? setSelected([...selected, index])
-                          : setSelected(selected.filter((i) => i !== index));
-                      }}
-                    />
-                  </TableCell>
-                </StyledTableRow>
-              ))}
+              {orders
+                .filter(
+                  (order) =>
+                    !assignedOrders
+                      .map((ao) => ao["Order ID"])
+                      .includes(order["Order ID"])
+                )
+                .map((shipment, index) => (
+                  <StyledTableRow key={index}>
+                    <TableCell>{shipment["Port of Origin"]}</TableCell>
+                    <TableCell>{shipment["Port of Destination"]}</TableCell>
+                    <TableCell>
+                      {new Date(
+                        shipment["Expected Time of Arrival"]
+                      ).toLocaleString()}
+                    </TableCell>
+                    <TableCell align="right">
+                      {shipment["Weight of Order (tons)"]}
+                    </TableCell>
+                    <TableCell align="center">
+                      <StyledCheckbox
+                        disabled={isLoading}
+                        checked={selected.includes(index)}
+                        onChange={(e) => {
+                          e.target.checked
+                            ? setSelected([...selected, index])
+                            : setSelected(selected.filter((i) => i !== index));
+                        }}
+                      />
+                    </TableCell>
+                  </StyledTableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>

@@ -6,13 +6,13 @@ const ProgressBackground = styled.div(({ theme }) => ({
   margin: theme.spacing(2, 0),
   width: theme.spacing(10),
   backgroundColor: theme.palette.grey[300],
-  borderRadius: theme.spacing(1),
+  borderRadius: theme.spacing(0.7),
 }));
 
 const Progress = styled.div(({ theme }) => ({
   width: 0,
   height: theme.spacing(2),
-  borderRadius: theme.spacing(1),
+  borderRadius: theme.spacing(0.7),
   transition: "width 0.2s ease",
 }));
 

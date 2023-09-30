@@ -6,6 +6,7 @@ const StyledNavbar = styled(Grid)(({ theme }) => ({
   padding: theme.spacing(3, 6),
   boxShadow: "0px 3px 3px rgba(0, 0, 0, 0.05)",
   borderRadius: theme.spacing(1.5),
+  backgroundColor: "white",
 }));
 
 const StyledLink = styled(Link)(({ theme }) => ({

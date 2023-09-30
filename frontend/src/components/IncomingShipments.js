@@ -21,8 +21,13 @@ const IncomingShipments = () => {
 
   const fetchData = async () => {
     try {
-      const response = await api.get("/fetch-data");
-      setShipments(response.data.ships);
+      const response = (await api.get("/ships")).data.incoming;
+      setShipments(
+        response.map((ship) => ({
+          ...ship,
+          "Weight of Order (tons)": ship["Weight of Order (tons)"] * 100,
+        }))
+      );
     } catch (error) {
       console.error("Error fetching incoming shipments:", error);
     }
@@ -46,7 +51,7 @@ const IncomingShipments = () => {
   };
 
   return (
-    <Grid container sx={{ p: 2 }}>
+    <Grid container rowGap={2} sx={{ px: 8, py: 4 }}>
       <Grid item xs={12}>
         <Typography
           variant="h4"
@@ -87,7 +92,13 @@ const IncomingShipments = () => {
                 <TableCell>{shipment["Idle Time (hours)"]}</TableCell>
                 <TableCell>{shipment["Weight of Order (tons)"]}</TableCell>
                 <TableCell>
-                  <ProgressBar width="50%" />
+                  <ProgressBar
+                    width={`${
+                      (shipment["Weight of Order (tons)"] /
+                        shipment["Vessel Capacity (tonnes)"]) *
+                      100
+                    }%`}
+                  />
                 </TableCell>
               </TableRow>
             ))}

@@ -1,68 +1,108 @@
-from gurobipy import Model, GRB
+import gurobipy as gp
+from gurobipy import GRB
+import pandas as pd
 
-def port_optimize():
+def run_model():
+    # Load the Excel files into DataFrames
+    order_df = pd.read_excel("../../dataset/order_dataset.xlsx")
+    ship_df = pd.read_excel("../../dataset/ship_dataset.xlsx")
 
-    # Create a new model
-    m = Model("port_logistics")
+    # Current time (assuming it's the time when the model is being run)
+    current_time = pd.Timestamp.now()
 
-    # Define constants (example values; modify as needed)
-    num_shipments = 10  # replace with actual number of shipments
-    num_ships = 5  # replace with actual number of ships
+    # Calculate ideal time to delivery for each order
+    order_df['Ideal_Time'] = (order_df['Expected Time of Arrival'] - current_time).dt.total_seconds() / 3600  # in hours
+
+    # Define the model
+    m = gp.Model("port_logistics")
+
+    # Number of orders and ships
+    num_orders = len(order_df)
+    num_ships = len(ship_df)
 
     # Decision Variables
-    x = m.addVars(num_shipments, num_ships, vtype=GRB.BINARY, name="x")
-    y = m.addVars(num_ships, vtype=GRB.CONTINUOUS, name="y")
-    t = m.addVars(num_shipments, vtype=GRB.CONTINUOUS, name="t")
-    z = m.addVars(num_shipments, num_shipments, vtype=GRB.BINARY, name="z")
+    x = m.addVars(num_orders, num_ships, vtype=GRB.BINARY, name="x")  # x[i,j]
+    y = m.addVars(num_ships, lb=0, ub=1, name="y")  # y[j]
+    t = m.addVars(num_orders, lb=0, name="t")  # t[i]
+    z = m.addVars(num_orders, num_orders, num_ships, vtype=GRB.BINARY, name="z")  # z[i,k,j]
 
-    # Parameters (sample values; replace with actual data)
-    C = [100, 200, 150, 250, 175]  # Capacities for each ship
-    S = [10, 15, 20, 25, 30, 15, 40, 10, 35, 15]  # Sizes for each shipment
-    P = [1, 2, 1, 2, 1, 1, 2, 2, 1, 2]  # Priority values (e.g., 1 for normal, 2 for express)
-    I = [3, 4, 3, 4, 3, 5, 2, 4, 3, 4]  # Ideal delivery times for each shipment
-    W_P = 1.5  # Weight for priority 
+    # Decision Variable for grouping orders with similar expected time of arrival and type
+    g = m.addVars(num_orders, num_orders, num_ships, vtype=GRB.BINARY, name="g")  # g[i,k,j]
 
-    # Objective
-    m.setObjective(sum(y[j] for j in range(num_ships)) - W_P * sum(P[i] * t[i] for i in range(num_shipments)), GRB.MAXIMIZE)
+    # Objective Function
+    m.setObjective(
+        gp.quicksum(y[j] for j in range(num_ships)) - 
+        gp.quicksum(
+            order_df.loc[i, 'Weight of Order (tons)'] * 
+            (2 if ship_df.loc[j, 'Priority'] == 'Express' else 1) * t[i] 
+            for i in range(num_orders) for j in range(num_ships)
+        ) -
+        gp.quicksum(
+            (ship_df.loc[j, 'Arrival Time'] - order_df.loc[i, 'Expected Time of Arrival']).total_seconds() / 3600  # Calculate time difference in hours
+            for i in range(num_orders) for j in range(num_ships)
+        ) +
+        gp.quicksum(
+            g[i, k, j] for i in range(num_orders) for k in range(num_orders) for j in range(num_ships)
+        ),
+        GRB.MAXIMIZE
+    )
 
     # Constraints
+    # 1. Assignment Constraint
+    for i in range(num_orders):
+        m.addConstr(gp.quicksum(x[i, j] for j in range(num_ships)) == 1)
 
-    # Assignment Constraint
-    for i in range(num_shipments):
-        m.addConstr(sum(x[i, j] for j in range(num_ships)) == 1)
-
-    # Capacity Constraint
+    # 2. Capacity Constraint
     for j in range(num_ships):
-        m.addConstr(sum(S[i] * x[i, j] for i in range(num_shipments)) <= C[j])
+        m.addConstr(gp.quicksum(order_df.loc[i, 'Weight of Order (tons)'] * x[i, j] for i in range(num_orders)) <= ship_df.loc[j, 'Vessel Capacity (tonnes)'])
 
-    # Fullness Definition
-    for j in range(num_ships):
-        m.addConstr(y[j] == sum(S[i] * x[i, j] for i in range(num_shipments)) / C[j])
+    # 3. Port Destination and Origin Constraints
+    for i in range(num_orders):
+        for j in range(num_ships):
+            if order_df.loc[i, 'Port of Origin'] != ship_df.loc[j, 'Port of Origin']:
+                m.addConstr(x[i, j] == 0)
+            if order_df.loc[i, 'Port of Destination'] != ship_df.loc[j, 'Port of Destination']:
+                m.addConstr(x[i, j] == 0)
 
-    # Combination Constraint
-    for i in range(num_shipments):
-        for k in range(num_shipments):
+    # 4. Combination Constraint
+    for i in range(num_orders):
+        for k in range(num_orders):
             for j in range(num_ships):
-                if i != k:
-                    m.addGenConstrIndicator(z[i, k], 1, x[i, j] == x[k, j])
+                m.addConstr(x[i, j] - x[k, j] <= 1 - z[i, k, j])
+                m.addConstr(x[k, j] - x[i, j] <= 1 - z[i, k, j])
 
-    # Time Constraint (assuming a constant time for ship j as an example)
-    T = [2, 3, 2.5, 3, 2]  # Example ship delivery times
-    for i in range(num_shipments):
-        m.addConstr(t[i] >= I[i] - sum(x[i, j] * T[j] for j in range(num_ships)))
+    # 5. Constraint to ensure g[i,k,j] is 1 only if orders i and k are assigned to the same ship j
+    for i in range(num_orders):
+        for k in range(num_orders):
+            for j in range(num_ships):
+                m.addConstr(x[i, j] + x[k, j] - 1 <= g[i, k, j])
 
-    # Optimize the model
+    # 6. Constraint for ensuring ship's Arrival Time is less than order's expected time of arrival
+    for i in range(num_orders):
+        for j in range(num_ships):
+            m.addConstr(
+                y[j] * (ship_df.loc[j, 'Arrival Time'] - order_df.loc[i, 'Expected Time of Arrival']).total_seconds() / 3600 <= 0
+            )
+
     m.optimize()
 
-    # Print results
-    if m.status == GRB.OPTIMAL:
-        print(f'Optimal objective: {m.objVal}')
-        for i in range(num_shipments):
-            for j in range(num_ships):
-                if x[i, j].x > 0.5:  # if the value is closer to 1, it indicates that shipment i is assigned to ship j
-                    print(f'Shipment {i} is assigned to ship {j}')
-    else:
-        print('No solution')
+    # Dictionary to store pairings
+    pairings = {}
 
-if __name__ == "__main__":
-    port_optimize()
+    # Iterate through the x decision variables
+    for i in range(num_orders):
+        for j in range(num_ships):
+            if x[i, j].X > 0.5:  # If x[i,j] is approximately 1 (due to the binary nature)
+                pairings[order_df.loc[i, 'Order ID']] = ship_df.loc[j, 'Ship ID']
+
+    # Convert dictionary to Pandas DataFrame
+    pairings_df = pd.DataFrame(list(pairings.items()), columns=['Order ID', 'Ship ID'])
+
+    # Display the pairings DataFrame
+    print("Pairings of Order ID and Ship ID:")
+    print(pairings_df)
+
+    # Save the pairings to an Excel file
+    return pairings_df.to_json(orient='records')
+
+print(run_model())

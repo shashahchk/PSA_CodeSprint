@@ -19,7 +19,7 @@
 
 ### Objective Function:
 
-Maximize the fullness of ships and minimize the time until delivery while considering different priorities:
+Maximize the fullness of ships and minimize the ship'sarrival time and order's expected time of arrival while considering different priorities:
 
 $$
 \max \sum_{j} y_j - W_P \sum_i P_i t_i

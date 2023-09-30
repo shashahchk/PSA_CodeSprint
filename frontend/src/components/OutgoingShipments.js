@@ -28,7 +28,8 @@ const OutgoingShipments = () => {
     try {
       if (shipments.length > 0) return;
       const response = (await api.get("/ships")).data.outgoing;
-      setShipments({ ...shipments, outgoing: response });
+      response.orders = [];
+      setShipments({ ...shipments, outgoing: response.map(shipment => ({ ...shipment, orders: [] }))});
     } catch (error) {
       console.error("Error fetching outgoing shipments:", error);
     }

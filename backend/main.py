@@ -20,14 +20,14 @@ def ships():
 @app.route('/api/assign_orders', methods=["GET", "POST"])
 @cross_origin(options=None)
 def assign_orders():
-    # if request.method == 'POST':
-    #     data = request.form
-    #     # TODO: get order_ids to pass into run_model
-    #     result = json.loads(run_model())
-    #     return collate_ships_to_orders(result)
-    # return "POST method only please"
-    result = json.loads(run_model([2, 3]))
-    return collate_ships_to_orders(result)
+    if request.method == 'POST':
+        data = request.form
+        ids = data['ids']
+        # TODO: get order_ids to pass into run_model
+        result = json.loads(run_model())
+        result = filter_by_order_id(ids, result)
+        return collate_ships_to_orders(result)
+    return "POST method only please"
 
 if __name__ == '__main__':
     app.run(debug=True)

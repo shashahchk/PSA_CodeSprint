@@ -45,12 +45,10 @@ const IncomingShipments = () => {
     try {
       if (shipments.length > 0) return;
       const response = (await api.get("/ships")).data.incoming;
-      setShipments(
-        response.map((ship) => ({
-          ...ship,
-          "Weight of Order (tons)": ship["Weight of Order (tons)"] * 100,
-        }))
-      );
+      setShipments((ss) => ({
+        ...ss,
+        incoming: response,
+      }));
     } catch (error) {
       console.error("Error fetching incoming shipments:", error);
     }
@@ -101,7 +99,7 @@ const IncomingShipments = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {shipments.map((shipment, index) => (
+              {shipments.incoming.map((shipment, index) => (
                 <StyledTableRow key={index}>
                   <TableCell>{shipment["Shipping Line"]}</TableCell>
                   <TableCell>{shipment["Vessel Capacity (tonnes)"]}</TableCell>

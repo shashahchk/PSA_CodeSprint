@@ -18,10 +18,13 @@ const theme = createTheme({
   },
 });
 
-export const ShipmentsContext = createContext([]);
+export const ShipmentsContext = createContext();
 
 function App() {
-  const [shipments, setShipments] = useState([]);
+  const [shipments, setShipments] = useState({
+    incoming: [],
+    outgoing: [],
+  });
 
   return (
     <div className="App">

@@ -70,7 +70,7 @@ const PendingOrders = () => {
   const getVisibleOrders = () =>
     orders.filter(
       (order) =>
-        !shipments
+        ![...shipments.incoming, ...shipments.outgoing]
           .flatMap((shipment) => shipment.orders)
           .map((assignedOrder) => assignedOrder["Order ID"])
           .includes(order["Order ID"])

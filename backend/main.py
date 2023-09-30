@@ -26,7 +26,7 @@ def assign_orders():
     #     result = json.loads(run_model())
     #     return collate_ships_to_orders(result)
     # return "POST method only please"
-    result = json.loads(run_model())
+    result = json.loads(run_model([2, 3]))
     return collate_ships_to_orders(result)
 
 if __name__ == '__main__':

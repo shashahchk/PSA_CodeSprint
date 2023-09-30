@@ -2,7 +2,7 @@ import gurobipy as gp
 from gurobipy import GRB
 import pandas as pd
 
-def run_model():
+def run_model(order_ids):
     # Load the Excel files into DataFrames
     order_df = pd.read_excel("../dataset/order_dataset.xlsx")
     ship_df = pd.read_excel("../dataset/ship_dataset.xlsx")

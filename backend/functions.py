@@ -59,9 +59,6 @@ def collate_ships_to_orders(order_to_ship):
         for order_id in order_ids:
             order = find_order_by_id(order_id, orders_data)
             orders.append(order)
-        ship['orders'] = orders
+        ship['Orders'] = orders
         result.append(ship)
     return result
-
-o = [{"Order ID":2,"Ship ID":1},{"Order ID":162,"Ship ID":157}]
-print(collate_ships_to_orders(o))

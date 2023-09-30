@@ -19,7 +19,7 @@
 
 ### Objective Function:
 
-Maximize the fullness of ships and minimize the ship'sarrival time and order's expected time of arrival while considering different priorities:
+Maximize the fullness of ships and minimize the ship's arrival time and order's expected time of arrival while considering different priorities:
 
 $$
 \max \sum_{j} y_j - W_P \sum_i P_i t_i
@@ -47,4 +47,7 @@ $$
 
 5. **Time Constraint**: Time until delivery for each shipment:
 
-   $t_i \geq I_i - \sum_{j} (x_{i,j} \times T_{j}) \quad \forall i$
+    &\forall i \in \{1, 2, \ldots, \text{num\_orders}\}, \forall j \in \{1, 2, \ldots, \text{num\_ships}\}, \\
+    &\quad y[j] \left( \frac{{\text{ship\_df.loc}[j, \text{Arrival Time}] - \text{order\_df.loc}[i, \text{Expected Time of Arrival}]}}{{3600}} \right) \leq 0
+\end{align*}
+

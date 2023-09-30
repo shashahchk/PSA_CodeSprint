@@ -167,7 +167,9 @@ const PendingOrders = () => {
                           checked={selected.length === orders.length}
                           onChange={(e) => {
                             e.target.checked
-                              ? setSelected(orders.map((_, i) => i))
+                              ? setSelected(
+                                  orders.map((order) => order["Order ID"])
+                                )
                               : setSelected([]);
                           }}
                         />

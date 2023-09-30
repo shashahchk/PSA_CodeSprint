@@ -4,8 +4,8 @@ import pandas as pd
 
 def run_model():
     # Load the Excel files into DataFrames
-    order_df = pd.read_excel("../../dataset/order_dataset.xlsx")
-    ship_df = pd.read_excel("../../dataset/ship_dataset.xlsx")
+    order_df = pd.read_excel("../dataset/order_dataset.xlsx")
+    ship_df = pd.read_excel("../dataset/ship_dataset.xlsx")
 
     # Current time (assuming it's the time when the model is being run)
     current_time = pd.Timestamp.now()
@@ -104,5 +104,3 @@ def run_model():
 
     # Save the pairings to an Excel file
     return pairings_df.to_json(orient='records')
-
-print(run_model())

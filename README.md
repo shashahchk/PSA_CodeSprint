@@ -14,15 +14,16 @@
 - $C_j$ - Capacity of ship $j$.
 - $S_i$ - Size of shipment $i$.
 - $P_i$ - Priority of shipment $i$ (express or normal).
-- $I_i$ - Ideal time to delivery for shipment $i$.
+- $I_i$ - Ship's arrival time to delivery for shipment $i$.
+- $E_i$ - Order's expected time of arrival for shipment $i$.
 - $W_P$ - Weight for priority (e.g., express shipments can have a higher weight).
 
 ### Objective Function:
 
-Maximize the fullness of ships and minimize the time until delivery while considering different priorities:
+Maximize the fullness of ships and minimize the ship's arrival time and order's expected time of arrival while considering different priorities:
 
 $$
-\max \sum_{j} y_j - W_P \sum_i P_i t_i
+\max \sum_{j} y_j - W_P \sum_i P_i - \sum_i I_i + E_i
 $$
 
 ### Constraints:
@@ -45,6 +46,6 @@ $$
 
    $x_{k,j} - x_{i,j} \leq 1 - z_{i,k} \quad \forall i, k, j$
 
-5. **Time Constraint**: Time until delivery for each shipment:
-
-   $t_i \geq I_i - \sum_{j} (x_{i,j} \times T_{j}) \quad \forall i$
+5. **Time Constraint**: Ship's arrival time < order's Expected time of arrival
+   
+7. **Origin and Destination Constraint**: Order's port of origin and destination must match with Ship's port of origin and destination

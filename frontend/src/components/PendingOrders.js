@@ -68,15 +68,6 @@ const PendingOrders = () => {
   const [selected, setSelected] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // const getVisibleOrders = () =>
-  //   orders.filter(
-  //     (order) =>
-  //       ![...shipments.incoming, ...shipments.outgoing]
-  //         .flatMap((shipment) => shipment.orders)
-  //         .map((assignedOrder) => assignedOrder["Order ID"])
-  //         .includes(order["Order ID"])
-  //   );
-
   useEffect(() => {
     // Fetching data from the Flask API
     fetchData();
@@ -85,7 +76,7 @@ const PendingOrders = () => {
   const fetchData = async () => {
     try {
       const response = await api.get("/orders");
-      setOrders([...response.data.incoming, ...response.data.outgoing]);
+      setOrders([...response.data.incoming.map, ...response.data.outgoing]);
     } catch (error) {
       console.error("Error fetching incoming orders:", error);
     }
@@ -104,6 +95,10 @@ const PendingOrders = () => {
   };
 
   if (orders.length === 0) return <Loading />;
+
+  const shownOrders = orders.filter(
+    (order) => !assignedOrders.includes(order["Order ID"])
+  );
 
   return (
     <Grid container rowGap={2} sx={{ px: 32, py: 4 }}>
@@ -137,10 +132,28 @@ const PendingOrders = () => {
               ids: totalOrders,
             });
             setShipments({
-              incoming: response.data.filter(shipment => shipment["Port of Origin"] !== "Singapore")
-                .map(shipment => ({ ...shipment, ["Weight of Order (tons)"]: shipment["Orders"].reduce((acc, order) => acc + order["Weight of Order (tons)"], 0) })),
-              outgoing: response.data.filter(shipment => shipment["Port of Origin"] === "Singapore")
-                .map(shipment => ({ ...shipment, ["Weight of Order (tons)"]: shipment["Orders"].reduce((acc, order) => acc + order["Weight of Order (tons)"], 0) })),
+              incoming: response.data
+                .filter(
+                  (shipment) => shipment["Port of Origin"] !== "Singapore"
+                )
+                .map((shipment) => ({
+                  ...shipment,
+                  ["Weight of Order (tons)"]: shipment["Orders"].reduce(
+                    (acc, order) => acc + order["Weight of Order (tons)"],
+                    0
+                  ),
+                })),
+              outgoing: response.data
+                .filter(
+                  (shipment) => shipment["Port of Origin"] === "Singapore"
+                )
+                .map((shipment) => ({
+                  ...shipment,
+                  ["Weight of Order (tons)"]: shipment["Orders"].reduce(
+                    (acc, order) => acc + order["Weight of Order (tons)"],
+                    0
+                  ),
+                })),
             });
             setAssignedOrders(totalOrders);
             setSelected([]);
@@ -187,14 +200,14 @@ const PendingOrders = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders
-                .filter(
-                  (order) =>
-                    !assignedOrders
-                      .map((ao) => ao["Order ID"])
-                      .includes(order["Order ID"])
-                )
-                .map((order) => (
+              {shownOrders.length === 0 ? (
+                <StyledTableRow>
+                  <TableCell colSpan={5} align="center">
+                    No orders in this shipment
+                  </TableCell>
+                </StyledTableRow>
+              ) : (
+                shownOrders.map((order) => (
                   <StyledTableRow key={order["Order ID"]}>
                     <TableCell>{order["Port of Origin"]}</TableCell>
                     <TableCell>{order["Port of Destination"]}</TableCell>
@@ -211,15 +224,18 @@ const PendingOrders = () => {
                         disabled={isLoading}
                         checked={selected.includes(order["Order ID"])}
                         onChange={(e) => {
-                          console.log(order["Order ID"])
+                          console.log(order["Order ID"]);
                           e.target.checked
                             ? setSelected([...selected, order["Order ID"]])
-                            : setSelected(selected.filter((i) => i !== order["Order ID"]));
+                            : setSelected(
+                                selected.filter((i) => i !== order["Order ID"])
+                              );
                         }}
                       />
                     </TableCell>
                   </StyledTableRow>
-                ))}
+                ))
+              )}
             </TableBody>
           </Table>
         </TableContainer>

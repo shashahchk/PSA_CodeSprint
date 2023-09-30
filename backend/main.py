@@ -1,6 +1,6 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
-from model.optimization_model import run_model
+# from model.optimization_model import run_model
 from functions import *
 
 app = Flask(__name__)

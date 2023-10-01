@@ -133,32 +133,30 @@ const PendingOrders = () => {
             });
             setShipments({
               incoming: [
-                ...shipments.incoming,
-                ...response.data
-                  .filter(
-                    (shipment) => shipment["Port of Origin"] !== "Singapore"
-                  )
-                  .map((shipment) => ({
-                    ...shipment,
-                    ["Weight of Order (tons)"]: shipment["Orders"].reduce(
+                shipments.incoming.map(shipment => {
+                  const newShipment = response.data.find(s => s["Shipping Line"] === shipment["Shipping Line"]);
+                  if (!newShipment) return shipment;
+                  return {
+                    ...newShipment,
+                    ["Weight of Order (tons)"]: newShipment["Orders"].reduce(
                       (acc, order) => acc + order["Weight of Order (tons)"],
                       0
                     ),
-                  })),
+                  }
+                })
               ],
               outgoing: [
-                ...shipments.outgoing,
-                ...response.data
-                  .filter(
-                    (shipment) => shipment["Port of Origin"] === "Singapore"
-                  )
-                  .map((shipment) => ({
-                    ...shipment,
-                    ["Weight of Order (tons)"]: shipment["Orders"].reduce(
+                shipments.outgoing.map(shipment => {
+                  const newShipment = response.data.find(s => s["Shipping Line"] === shipment["Shipping Line"]);
+                  if (!newShipment) return shipment;
+                  return {
+                    ...newShipment,
+                    ["Weight of Order (tons)"]: newShipment["Orders"].reduce(
                       (acc, order) => acc + order["Weight of Order (tons)"],
                       0
                     ),
-                  })),
+                  }
+                })
               ],
             });
             setAssignedOrders(totalOrders);

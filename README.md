@@ -1,4 +1,34 @@
 # PSA_CodeSprint
+## Getting Started
+1. Install the required python dependencies
+```bash 
+python -m pip install -r requirements.txt
+```
+
+**Gurobi**
+
+Installation of Gurobi is required to run our optimization models, you can use pip to install Gurobi into your currently active Python environment
+```bash
+python -m pip install gurobipy
+```
+A license is also required to run Gurobi. Refer to this [link](https://www.gurobi.com/academia/academic-program-and-licenses/) for free Gurobi licenses.
+
+
+2. Install the node packages to run the react frontend.
+```bash
+npm install
+```
+
+3. Run the flask backend.
+```bash
+cd backend
+py main.py
+```
+4. Run the react frontend in /ad-input
+```bash
+cd frontend
+npm start
+```
 
 ## Optimization Model for Port Logistics Service Provider
 
@@ -49,3 +79,5 @@ $$
 5. **Time Constraint**: Ship's arrival time < order's Expected time of arrival
    
 7. **Origin and Destination Constraint**: Order's port of origin and destination must match with Ship's port of origin and destination
+
+

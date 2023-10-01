@@ -2,10 +2,12 @@ import json
 from collections import defaultdict
 import pandas as pd
 
-def xlsx_to_json(excel_path):
-    df = pd.read_excel(excel_path)
+
+def xlsx_to_json(xlsx_path):
+    df = pd.read_excel(xlsx_path)
     result = df.to_json(orient='records')
     return json.loads(result)
+
 
 def seperate_incoming_outgoing(entries):
     INTERMEDIATE_PORT = 'Singapore'
@@ -28,6 +30,7 @@ def seperate_incoming_outgoing(entries):
 
     return result
 
+
 def filter_by_order_id(order_ids, orders_to_ship):
     result = []
     for order in orders_to_ship:
@@ -35,17 +38,20 @@ def filter_by_order_id(order_ids, orders_to_ship):
             result.append(order)
     return result
 
+
 def find_ship_by_id(id: int, entries: dict):
     for entry in entries:
         if entry['Ship ID'] == id:
             return entry
     return None
 
+
 def find_order_by_id(id: int, entries: dict):
     for entry in entries:
         if entry['Order ID'] == id:
             return entry
     return None
+
 
 def collate_ships_to_orders(order_to_ship):
     # Group orders by ship ID
@@ -59,7 +65,7 @@ def collate_ships_to_orders(order_to_ship):
     result = []
     orders_data = xlsx_to_json('../dataset/order_dataset.xlsx')
     ships_data = xlsx_to_json('../dataset/ship_dataset.xlsx')
-    
+
     for ship_id, order_ids in ship_id_groups.items():
         ship = find_ship_by_id(ship_id, ships_data)
         orders = []

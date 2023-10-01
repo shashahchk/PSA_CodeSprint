@@ -51,7 +51,7 @@ const Shipment = () => {
   useEffect(() => {
     // set width of progress bar
     if (shipProgress.current) {
-      const width = 100 - capacity;
+      const width = Math.min(100 - capacity, 99.23);
       shipProgress.current.style.clipPath = `inset(0px ${width}% 0px 0px)`;
     }
   }, [shipment]);

@@ -4,16 +4,18 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (username === "portWorker" && password === "secure123") {
-      alert("Logged in successfully");
-
+    if (username === "user" && password === "secure123") {
+      navigate("/incoming_shipments");
+      
       // Here, you can redirect or perform other tasks
     } else {
       alert("Invalid credentials");

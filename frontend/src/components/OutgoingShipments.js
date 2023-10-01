@@ -110,9 +110,9 @@ const OutgoingShipments = () => {
                   <TableCell>
                     <ProgressBar
                       width={`${
-                        (shipment["Weight of Order (tons)"] /
+                        Math.min((shipment["Weight of Order (tons)"] /
                           shipment["Vessel Capacity (tonnes)"]) *
-                        100
+                        100, 99.23)
                       }%`}
                     />
                   </TableCell>

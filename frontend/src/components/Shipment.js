@@ -31,6 +31,7 @@ const CargoShipBackground = styled.img`
   filter: invert(32%) sepia(20%) saturate(1711%) hue-rotate(237deg)
     brightness(89%) contrast(90%);
   clip-path: inset(0px 100% 0px 0px);
+  transition: all 0.3s ease;
 `;
 
 const Shipment = () => {

@@ -132,9 +132,10 @@ const PendingOrders = () => {
               ids: totalOrders,
             });
             setShipments({
-              incoming: [
+              incoming: 
                 shipments.incoming.map(shipment => {
-                  const newShipment = response.data.find(s => s["Shipping Line"] === shipment["Shipping Line"]);
+                  const newShipment = response.data.find(s => s["Ship ID"] === shipment["Ship ID"]);
+                  console.log(newShipment)
                   if (!newShipment) return shipment;
                   return {
                     ...newShipment,
@@ -143,11 +144,10 @@ const PendingOrders = () => {
                       0
                     ),
                   }
-                })
-              ],
-              outgoing: [
+                }),
+              outgoing: 
                 shipments.outgoing.map(shipment => {
-                  const newShipment = response.data.find(s => s["Shipping Line"] === shipment["Shipping Line"]);
+                  const newShipment = response.data.find(s => s["Ship ID"] === shipment["Ship ID"]);
                   if (!newShipment) return shipment;
                   return {
                     ...newShipment,
@@ -157,7 +157,7 @@ const PendingOrders = () => {
                     ),
                   }
                 })
-              ],
+              
             });
             setAssignedOrders(totalOrders);
             setSelected([]);

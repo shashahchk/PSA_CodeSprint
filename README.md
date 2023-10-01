@@ -32,6 +32,19 @@ npm start
 ## Introduction
 Welcome to PortFlow! A project that aims to consolidate shipments by automatically matchmaking shippers and shipping lines, taking into account the available containers, and combining orders with similar destinations and expected time of arrival – all in one click
 
+### Features
+1. Matching Algorithm using Gurobi Model
+Utillizes various features such as order's expected time of arrival, both order and ship's port of harbour and origin, ship's capacity.
+
+2. Full-Stack Web App for Order management and Ship tracking
+Provides a user-friendly web-app for PSA to keep track of orders, ship schedules and capacity
+
+### Technologies Used
+- Gurobi Optimizer
+- Python
+- React (Front-end)
+- Flask (Back-end)
+
 ## Optimization Model for Port Logistics Service Provider
 
 ### Decision Variables:

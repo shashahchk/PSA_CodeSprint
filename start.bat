@@ -15,6 +15,9 @@ cd ..
 rem Navigate to the backend directory
 cd backend
 
+rem Install the required python packages
+py -m pip install -r requirements.txt
+
 rem Run python3 main.py in backend
 py main.py
 

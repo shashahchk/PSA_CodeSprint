@@ -29,6 +29,8 @@ py main.py
 cd frontend
 npm start
 ```
+## Introduction
+Welcome to PortFlow! A project that aims to consolidate shipments by automatically matchmaking shippers and shipping lines, taking into account the available containers, and combining orders with similar destinations and expected time of arrival – all in one click
 
 ## Optimization Model for Port Logistics Service Provider
 

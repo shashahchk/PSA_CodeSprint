@@ -20,4 +20,3 @@ python3 main.py
 
 # Navigate back to the outer directory (optional)
 cd ..
-

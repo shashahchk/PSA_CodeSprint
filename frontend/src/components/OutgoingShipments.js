@@ -15,8 +15,10 @@ import ProgressBar from "./ProgressBar/ProgressBar";
 import Loading from "./Loading/Loading";
 import { StyledTableCell, StyledTableRow } from "./IncomingShipments";
 import { ShipmentsContext } from "../App";
+import { useNavigate } from "react-router-dom";
 
 const OutgoingShipments = () => {
+  const navigate = useNavigate();
   const [shipments, setShipments] = useContext(ShipmentsContext);
 
   useEffect(() => {
@@ -87,7 +89,10 @@ const OutgoingShipments = () => {
             </TableHead>
             <TableBody>
               {shipments.outgoing.map((shipment, index) => (
-                <StyledTableRow key={index}>
+                <StyledTableRow
+                  key={index}
+                  onClick={() => navigate(`/shipment/${shipment["Ship ID"]}`)}
+                >
                   <TableCell>{shipment["Shipping Line"]}</TableCell>
                   <TableCell>{shipment["Vessel Capacity (tonnes)"]}</TableCell>
                   <TableCell>{shipment["Port of Origin"]}</TableCell>

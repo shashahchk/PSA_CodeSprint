@@ -36,7 +36,7 @@ const Shipment = () => {
     "Weight of Order (tons)": "right",
   };
 
-  const { ["Order ID"]: _, ...shipmentDetails } = shipment;
+  const { ["Order ID"]: _, ["Orders"]: __, ...shipmentDetails } = shipment;
 
   return (
     <Grid container rowGap={2} sx={{ px: 32, py: 4 }}>

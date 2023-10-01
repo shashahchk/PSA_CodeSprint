@@ -76,7 +76,7 @@ const PendingOrders = () => {
   const fetchData = async () => {
     try {
       const response = await api.get("/orders");
-      setOrders([...response.data.incoming.map, ...response.data.outgoing]);
+      setOrders([...response.data.incoming, ...response.data.outgoing]);
     } catch (error) {
       console.error("Error fetching incoming orders:", error);
     }

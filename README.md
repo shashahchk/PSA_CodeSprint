@@ -2,33 +2,33 @@
 ## Getting Started
 1. Install the required python dependencies
 ```bash 
+cd backend
 python -m pip install -r requirements.txt
 ```
-
+2. Install the required node dependencies
+```bash
+cd ../frontend
+npm install
+```
 **Gurobi**
 
-Installation of Gurobi is required to run our optimization models, you can use pip to install Gurobi into your currently active Python environment
-```bash
-python -m pip install gurobipy
-```
+
 A license is also required to run Gurobi. Refer to this [link](https://www.gurobi.com/academia/academic-program-and-licenses/) for free Gurobi licenses.
 
 
-2. Install the node packages to run the react frontend.
+2. Run the frontend server. Do these in ./frontend
 ```bash
-npm install
-```
-
-3. Run the flask backend.
-```bash
-cd backend
-py main.py
-```
-4. Run the react frontend in /ad-input
-```bash
-cd frontend
 npm start
 ```
+
+3. Run the flask backend. Do these in ./backend
+```bash
+py main.py
+```
+## Executable files
+You can also run the start.sh file on UNIX or start.bat file on Windows to perform the above steps automatically.
+
+
 ## Introduction
 Welcome to PortFlow! A project that aims to consolidate shipments by automatically matchmaking shippers and shipping lines, taking into account the available containers, and combining orders with similar destinations and expected time of arrival – all in one click
 
@@ -94,5 +94,3 @@ $$
 5. **Time Constraint**: Ship's arrival time < order's Expected time of arrival
    
 7. **Origin and Destination Constraint**: Order's port of origin and destination must match with Ship's port of origin and destination
-
-

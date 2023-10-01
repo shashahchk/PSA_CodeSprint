@@ -19,20 +19,20 @@ const theme = createTheme({
   },
 });
 
-export const ShipmentsContext = createContext({
-  incoming: [],
-  outgoing: [],
-});
+export const ShipmentsContext = createContext();
 
 function App() {
   const [shipments, setShipments] = useState({
     incoming: [],
     outgoing: [],
   });
+  const [assignedOrders, setAssignedOrders] = useState([]);
 
   return (
     <div className="App">
-      <ShipmentsContext.Provider value={[shipments, setShipments]}>
+      <ShipmentsContext.Provider
+        value={[shipments, setShipments, assignedOrders, setAssignedOrders]}
+      >
         <ThemeProvider theme={theme}>
           <Navbar />
           <Routes>

@@ -34,7 +34,7 @@ const OutgoingShipments = () => {
         ...shipments,
         outgoing: response.map((shipment) => ({
           ...shipment,
-          orders: [],
+          ["Orders"]: [],
           ["Weight of Order (tons)"]: 0,
         })),
       });

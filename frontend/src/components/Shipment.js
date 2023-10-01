@@ -10,10 +10,28 @@ import {
   TableContainer,
   Box,
 } from "@mui/material";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { StyledTableCell, StyledTableRow } from "./IncomingShipments";
 import { ShipmentsContext } from "../App";
+import cargoShip from "../cargo_ship.svg";
+import styled from "@emotion/styled";
+
+const CargoShip = styled.img`
+  height: 230px;
+  opacity: 0.25;
+  grid-row: 1;
+  grid-column: 1;
+`;
+
+const CargoShipBackground = styled.img`
+  height: 230px;
+  grid-row: 1;
+  grid-column: 1;
+  filter: invert(32%) sepia(20%) saturate(1711%) hue-rotate(237deg)
+    brightness(89%) contrast(90%);
+  clip-path: inset(0px 100% 0px 0px);
+`;
 
 const Shipment = () => {
   const params = useParams();
@@ -24,7 +42,18 @@ const Shipment = () => {
     (s) => s["Ship ID"] === id
   );
 
-  console.log(shipment);
+  const capacity =
+    (shipment["Weight of Order (tons)"] /
+      shipment["Vessel Capacity (tonnes)"]) *
+    100;
+  const shipProgress = useRef(null);
+  useEffect(() => {
+    // set width of progress bar
+    if (shipProgress.current) {
+      const width = 100 - capacity;
+      shipProgress.current.style.clipPath = `inset(0px ${width}% 0px 0px)`;
+    }
+  }, [shipment]);
 
   const columns = [
     "Port of Origin",
@@ -53,18 +82,27 @@ const Shipment = () => {
       </Grid>
       <Grid item xs={12}>
         <Paper sx={{ borderRadius: 3, p: 4, mb: 4 }}>
-          {Object.entries(shipmentDetails).map(([key, value]) => (
-            <Typography key={key} textAlign="left">
-              <Box component="span" fontWeight="700">
-                {key}
-              </Box>
-              {`: ${
-                key === "Departure Time" || key === "Arrival Time"
-                  ? new Date(value).toLocaleString()
-                  : value
-              }`}
-            </Typography>
-          ))}
+          <Grid container justifyContent="space-between">
+            <Grid item xs="auto">
+              {Object.entries(shipmentDetails).map(([key, value]) => (
+                <Typography key={key} textAlign="left">
+                  <Box component="span" fontWeight="700">
+                    {key}
+                  </Box>
+                  {`: ${
+                    key === "Departure Time" || key === "Arrival Time"
+                      ? new Date(value).toLocaleString()
+                      : value
+                  }`}
+                </Typography>
+              ))}
+            </Grid>
+            <Box item xs sx={{ display: "grid", px: 10 }}>
+              <CargoShip src={cargoShip} />
+              <CargoShipBackground src={cargoShip} ref={shipProgress} />
+              <Typography variant="h5">{`${capacity.toFixed(2)}%`}</Typography>
+            </Box>
+          </Grid>
         </Paper>
       </Grid>
       <Grid item xs={12}>

@@ -52,7 +52,7 @@ const IncomingShipments = () => {
         ...shipments,
         incoming: response.map((shipment) => ({
           ...shipment,
-          orders: [],
+          ["Orders"]: [],
           ["Weight of Order (tons)"]: 0,
         })),
       });

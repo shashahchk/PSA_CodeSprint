@@ -62,9 +62,9 @@ const StyledIndeterminateCheckbox = styled(IndeterminateCheckBoxIcon)(
 );
 
 const PendingOrders = () => {
-  const [assignedOrders, setAssignedOrders] = useState([]);
   const [orders, setOrders] = useState([]); // ALL ORDERS as sent by the API
-  const [shipments, setShipments] = useContext(ShipmentsContext);
+  const [shipments, setShipments, assignedOrders, setAssignedOrders] =
+    useContext(ShipmentsContext);
   const [selected, setSelected] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -132,28 +132,34 @@ const PendingOrders = () => {
               ids: totalOrders,
             });
             setShipments({
-              incoming: response.data
-                .filter(
-                  (shipment) => shipment["Port of Origin"] !== "Singapore"
-                )
-                .map((shipment) => ({
-                  ...shipment,
-                  ["Weight of Order (tons)"]: shipment["Orders"].reduce(
-                    (acc, order) => acc + order["Weight of Order (tons)"],
-                    0
-                  ),
-                })),
-              outgoing: response.data
-                .filter(
-                  (shipment) => shipment["Port of Origin"] === "Singapore"
-                )
-                .map((shipment) => ({
-                  ...shipment,
-                  ["Weight of Order (tons)"]: shipment["Orders"].reduce(
-                    (acc, order) => acc + order["Weight of Order (tons)"],
-                    0
-                  ),
-                })),
+              incoming: [
+                ...shipments.incoming,
+                ...response.data
+                  .filter(
+                    (shipment) => shipment["Port of Origin"] !== "Singapore"
+                  )
+                  .map((shipment) => ({
+                    ...shipment,
+                    ["Weight of Order (tons)"]: shipment["Orders"].reduce(
+                      (acc, order) => acc + order["Weight of Order (tons)"],
+                      0
+                    ),
+                  })),
+              ],
+              outgoing: [
+                ...shipments.outgoing,
+                ...response.data
+                  .filter(
+                    (shipment) => shipment["Port of Origin"] === "Singapore"
+                  )
+                  .map((shipment) => ({
+                    ...shipment,
+                    ["Weight of Order (tons)"]: shipment["Orders"].reduce(
+                      (acc, order) => acc + order["Weight of Order (tons)"],
+                      0
+                    ),
+                  })),
+              ],
             });
             setAssignedOrders(totalOrders);
             setSelected([]);
@@ -224,7 +230,6 @@ const PendingOrders = () => {
                         disabled={isLoading}
                         checked={selected.includes(order["Order ID"])}
                         onChange={(e) => {
-                          console.log(order["Order ID"]);
                           e.target.checked
                             ? setSelected([...selected, order["Order ID"]])
                             : setSelected(

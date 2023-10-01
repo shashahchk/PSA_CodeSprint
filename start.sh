@@ -15,6 +15,9 @@ cd ..
 # Navigate to the backend directory
 cd ./backend
 
+# Install python dependencies
+python3 -m pip install -r requirements.txt
+
 # Run python3 main.py in backend
 python3 main.py
 

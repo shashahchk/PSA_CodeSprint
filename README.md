@@ -1,29 +1,26 @@
 # PSA_CodeSprint
 ## Getting Started
-1. Install the required python dependencies
+We are using a flask backend and a React frontend. Please note that you will need python and node installed in your system for this to run. You can either run the following commands or run the .sh/.bat file (see below). Also note that if you choose to run our Gurobi model, you will need a license is also required to run Gurobi. Refer to this [link](https://www.gurobi.com/academia/academic-program-and-licenses/) for free Gurobi licenses.
+
+1. Install the required python dependencies (Run with py instead of python3 on Windows).
 ```bash 
 cd backend
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
-2. Install the required node dependencies
+2. Install the required node dependencies.
 ```bash
 cd ../frontend
 npm install
 ```
-**Gurobi**
 
-
-A license is also required to run Gurobi. Refer to this [link](https://www.gurobi.com/academia/academic-program-and-licenses/) for free Gurobi licenses.
-
-
-2. Run the frontend server. Do these in ./frontend
+2. Run the frontend server. Do these in ./frontend.
 ```bash
 npm start
 ```
 
-3. Run the flask backend. Do these in ./backend
+3. Run the flask backend. Do these in ./backend. (Run py on Windows).
 ```bash
-py main.py
+python3 main.py
 ```
 ## Executable files
 You can also run the start.sh file on UNIX or start.bat file on Windows to perform the above steps automatically.
